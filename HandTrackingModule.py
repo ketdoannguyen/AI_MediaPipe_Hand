@@ -3,8 +3,7 @@ import mediapipe as mp
 
 
 class HandDetector():
-    def __init__(self, model=False, maxNumHands=
-    2, modelComplexity=1, minDetection=0.5, minTracking=0.5):
+    def __init__(self, model=False, maxNumHands=2, modelComplexity=1, minDetection=0.5, minTracking=0.5):
         self.model = model
         self.maxNumHands = maxNumHands
         self.modelComplexity = modelComplexity
@@ -15,13 +14,16 @@ class HandDetector():
         self.hands = self.mpHands.Hands(self.model, self.maxNumHands, self.modelComplexity, self.minDetection,
                                         self.minTracking)
         self.mpDraw = mp.solutions.drawing_utils
+        self.mpDrawType = mp.solutions.drawing_styles
 
     def findHands(self, img):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
-                self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
+                self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS,
+                                           self.mpDrawType.get_default_hand_landmarks_style(),
+                                           self.mpDrawType.get_default_hand_connections_style())
         return img
 
     def findPosition(self, img, maxNumHand=5, draw=False):
@@ -48,7 +50,7 @@ class HandDetector():
                         cx, cy = int(lms.x * weight), int(lms.y * height)
                         listLmsEachHand.append([idx, cx, cy])
                         if draw:
-                            cv2.circle(img, (cx, cy), 12, (255, 0, 255), -1, cv2.LINE_AA)
+                            cv2.circle(img, (cx, cy), 8, (255, 0, 255), -1, cv2.LINE_AA)
                     listLmsAllHand.append((idxHand, listLmsEachHand, handType))
                 return listLmsAllHand
         return []
