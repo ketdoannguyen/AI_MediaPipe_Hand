@@ -3,7 +3,7 @@ import mediapipe as mp
 
 
 class HandDetector():
-    def __init__(self, model=False, maxNumHands=2, modelComplexity=1, minDetection=0.5, minTracking=0.5):
+    def __init__(self, model=False, maxNumHands=2, modelComplexity=1, minDetection=1, minTracking=1):
         self.model = model
         self.maxNumHands = maxNumHands
         self.modelComplexity = modelComplexity
